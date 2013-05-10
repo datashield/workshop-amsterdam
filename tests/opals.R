@@ -26,6 +26,7 @@ datashield.aggregate(ncds,'summary(HOS)')
 
 # HUNT
 opal.table(hunt,'test','HOP')
+datashield.assign(hunt,'HOS','test.HOP:HLTH_OBESE_STRICT')
 
 # PREVEND
 opal.table(prevend,'opal-data','HOP')
