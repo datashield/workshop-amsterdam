@@ -3,8 +3,8 @@
 library('datashieldclient')
 
 credentials <- list(
-  sslcert='keys/publickey.pem',
-  sslkey='keys/privatekey.pem',
+  sslcert=paste0(Sys.glob('~'),'/keys/publickey.pem'),
+  sslkey=paste0(Sys.glob('~'),'/keys/privatekey.pem'),
   ssl.verifyhost=0,
   ssl.verifypeer=0,
   sslversion=3)
