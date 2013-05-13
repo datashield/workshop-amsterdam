@@ -20,16 +20,24 @@ opals<-list(ncds, hunt, prevend, finrisk)
 opal.table(ncds,'hop','HOP')
 #opal.variable(ncds,'hop','HOP','HLTH_OBESE_STRICT')
 datashield.assign(ncds,'HOS','hop.HOP:HLTH_OBESE_STRICT')
-datashield.symbols(ncds)
 datashield.aggregate(ncds,'length(HOS)')
 datashield.aggregate(ncds,'summary(HOS)')
+
+# PREVEND
+opal.table(prevend,'hop-prevend','HOP')
+datashield.assign(prevend,'HOS','hop-prevend.HOP:HLTH_OBESE_STRICT')
+datashield.aggregate(prevend,'length(HOS)')
+datashield.aggregate(prevend,'summary(HOS)')
+
+# FINRISK
+opal.table(finrisk,'HOPcopy','HOP')
+datashield.assign(finrisk,'HOS','HOPcopy.HOP:HLTH_OBESE_STRICT')
+datashield.aggregate(finrisk,'length(HOS)')
+datashield.aggregate(finrisk,'summary(HOS)')
 
 # HUNT
 opal.table(hunt,'bioshare','HOP')
 datashield.assign(hunt,'HOS','bioshare.HOP:HLTH_OBESE_STRICT')
+datashield.aggregate(hunt,'length(HOS)')
+datashield.aggregate(hunt,'summary(HOS)')
 
-# PREVEND
-opal.table(prevend,'opal-data','HOP')
-
-# FINRISK
-opal.table(finrisk,'opal-mysql','HOP')
