@@ -2,6 +2,7 @@
 
 library('datashieldclient')
 
+# Login in opal of each study
 credentials <- list(
   sslcert=paste0(Sys.glob('~'),'/.ssh/publickey.pem'),
   sslkey=paste0(Sys.glob('~'),'/.ssh/privatekey.pem'),
@@ -9,7 +10,6 @@ credentials <- list(
   ssl.verifypeer=0,
   sslversion=3)
 
-# login in opals
 ncds <- opal.login(url='https://lamp-api-32.rcs.le.ac.uk:8443', opts=credentials)
 hunt <- opal.login(url='https://opal.medisin.ntnu.no', opts=credentials)
 prevend <- opal.login(url='https://molgenis34.target.rug.nl:8443', opts=credentials)
@@ -27,7 +27,6 @@ datashield.assign(prevend,'HOS','hop-prevend.HOP:HLTH_OBESE_STRICT')
 datashield.aggregate(prevend,'length(HOS)')
 
 # FINRISK
-#opal.datasources(finrisk)
 opal.table(finrisk,'HOPcopy','HOP')
 datashield.assign(finrisk,'HOS','HOPcopy.HOP:HLTH_OBESE_STRICT')
 datashield.aggregate(finrisk,'length(HOS)')
@@ -37,5 +36,6 @@ opal.table(hunt,'bioshare','HOP')
 datashield.assign(hunt,'HOS','bioshare.HOP:HLTH_OBESE_STRICT')
 datashield.aggregate(hunt,'length(HOS)')
 
-datashield.aggregate(ncds,'summary(HOS)')
+# Summary of HOS for all studies
+datashield.aggregate(opals,'summary(HOS)')
 
