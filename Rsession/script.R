@@ -1,5 +1,22 @@
-# load the data
-a <- read.table("dummyHOPNCDS.csv", head=T, sep=",")
+# uncomment the below line to set the working directory 
+#(CHANGE YOUR USER ID ACCORDINGLY!)
+# setwd("/home/datashield/ws2/workshop-amsterdam/Rsession")
+
+a<-read.csv("data.csv")
+
+is.factor(a[,7])
+
+a[,7]<-as.factor(a[,7])
+
+a[,8]<-as.factor(a[,8])
+
+a[,9]<-as.factor(a[,9])
+
+a[,10]<-as.factor(a[,10])
+
+a[,11]<-as.factor(a[,11])
+
+a[,12]<-as.factor(a[,12])
 
 
 #########################Q1
