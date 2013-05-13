@@ -25,8 +25,8 @@ datashield.aggregate(ncds,'length(HOS)')
 datashield.aggregate(ncds,'summary(HOS)')
 
 # HUNT
-opal.table(hunt,'test','HOP')
-datashield.assign(hunt,'HOS','test.HOP:HLTH_OBESE_STRICT')
+opal.table(hunt,'bioshare','HOP')
+datashield.assign(hunt,'HOS','bioshare.HOP:HLTH_OBESE_STRICT')
 
 # PREVEND
 opal.table(prevend,'opal-data','HOP')
