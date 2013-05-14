@@ -21,11 +21,6 @@ opal.table(ncds,'hop','HOP')
 datashield.assign(ncds,'HOS','hop.HOP:HLTH_OBESE_STRICT')
 datashield.aggregate(ncds,'length(HOS)')
 
-# PREVEND
-opal.table(prevend,'hop-prevend','HOP')
-datashield.assign(prevend,'HOS','hop-prevend.HOP:HLTH_OBESE_STRICT')
-datashield.aggregate(prevend,'length(HOS)')
-
 # FINRISK
 opal.table(finrisk,'HOPcopy','HOP')
 datashield.assign(finrisk,'HOS','HOPcopy.HOP:HLTH_OBESE_STRICT')
@@ -36,6 +31,10 @@ opal.table(hunt,'bioshare','HOP')
 datashield.assign(hunt,'HOS','bioshare.HOP:HLTH_OBESE_STRICT')
 datashield.aggregate(hunt,'length(HOS)')
 
+# PREVEND
+opal.table(prevend,'hop-prevend','HOP')
+datashield.assign(prevend,'HOS','hop-prevend.HOP:HLTH_OBESE_STRICT')
+datashield.aggregate(prevend,'length(HOS)')
+
 # Summary of HOS for all studies
 datashield.aggregate(opals,'summary(HOS)')
-
