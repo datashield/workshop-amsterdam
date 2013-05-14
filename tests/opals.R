@@ -47,3 +47,24 @@ datashield.aggregate(opals,'summary(HOS)')
 
 # Total number of participants
 Reduce(sum,datashield.aggregate(opals,'length(HOS)'))
+
+# GLM test
+datashield.assign(ncds,'PM_BMI_CONTINUOUS','hop.HOP:PM_BMI_CONTINUOUS')
+datashield.assign(finrisk,'PM_BMI_CONTINUOUS','HOPcopy.HOP:PM_BMI_CONTINUOUS')
+datashield.assign(hunt,'PM_BMI_CONTINUOUS','bioshare.HOP:PM_BMI_CONTINUOUS')
+datashield.assign(prevend,'PM_BMI_CONTINUOUS','hop-prevend.HOP:PM_BMI_CONTINUOUS')
+datashield.assign(kora,'PM_BMI_CONTINUOUS','bioshare.HOP:PM_BMI_CONTINUOUS')
+
+datashield.assign(ncds,'PM_HEIGHT_MEASURE','hop.HOP:PM_HEIGHT_MEASURE')
+datashield.assign(finrisk,'PM_HEIGHT_MEASURE','HOPcopy.HOP:PM_HEIGHT_MEASURE')
+datashield.assign(hunt,'PM_HEIGHT_MEASURE','bioshare.HOP:PM_HEIGHT_MEASURE')
+datashield.assign(prevend,'PM_HEIGHT_MEASURE','hop-prevend.HOP:PM_HEIGHT_MEASURE')
+datashield.assign(kora,'PM_HEIGHT_MEASURE','bioshare.HOP:PM_HEIGHT_MEASURE')
+
+datashield.assign(ncds,'PM_WEIGHT_MEASURE','hop.HOP:PM_WEIGHT_MEASURE')
+datashield.assign(finrisk,'PM_WEIGHT_MEASURE','HOPcopy.HOP:PM_WEIGHT_MEASURE')
+datashield.assign(hunt,'PM_WEIGHT_MEASURE','bioshare.HOP:PM_WEIGHT_MEASURE')
+datashield.assign(prevend,'PM_WEIGHT_MEASURE','hop-prevend.HOP:PM_WEIGHT_MEASURE')
+datashield.assign(kora,'PM_WEIGHT_MEASURE','bioshare.HOP:PM_WEIGHT_MEASURE')
+
+datashield.glm(opals,PM_BMI_CONTINUOUS ~ PM_HEIGHT_MEASURE + PM_WEIGHT_MEASURE,as.name("gaussian"))
