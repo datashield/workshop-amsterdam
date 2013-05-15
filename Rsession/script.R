@@ -53,3 +53,8 @@ summary(q4)
 ###########################q5
 q5<-glm(a$DIS_DIAB~a$LAB_GLUC_ADJUSTED+a$PM_BMI_CONTINUOUS,family="binomial")
 summary(q5)
+
+###########################q6
+q6<-glm(a$MEDI_LPD~a$LAB_TSC+a$PM_BMI_CONTINUOUS,family="binomial")
+summary(q5)
+
