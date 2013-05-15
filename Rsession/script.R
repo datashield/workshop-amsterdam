@@ -1,6 +1,6 @@
 # uncomment the below line to set the working directory 
 #(CHANGE YOUR USER ID ACCORDINGLY!)
-# setwd("/home/datashield/ws2/workshop-amsterdam/Rsession")
+setwd("/home/ws3/workshop-amsterdam/Rsession")
 
 a<-read.csv("data.csv")
 
