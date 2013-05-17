@@ -1,0 +1,2109 @@
+
+R version 2.15.3 (2013-03-01) -- "Security Blanket"
+Copyright (C) 2013 The R Foundation for Statistical Computing
+ISBN 3-900051-07-0
+Platform: x86_64-pc-linux-gnu (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> # LOAD REQUIRED LIBRARIES
+> library('datashieldclient')
+Loading required package: opal
+Loading required package: RCurl
+Loading required package: bitops
+Loading required package: rjson
+Loading required package: fields
+Loading required package: spam
+Spam version 0.29-3 (2013-04-23) is loaded.
+Type 'help( Spam)' or 'demo( spam)' for a short introduction 
+and overview of this package.
+Help for individual functions is also obtained by adding the
+suffix '.spam' to the function name, e.g. 'help( chol.spam)'.
+
+Attaching package: ‘spam’
+
+The following object(s) are masked from ‘package:base’:
+
+    backsolve, forwardsolve
+
+Loading required package: maps
+Loading required package: dsbaseclient
+Loading required package: dsmodellingclient
+Loading required package: dsteststatsclient
+> 
+> 
+> # LOGIN TO COLLABORATING SERVERS
+> credentials <- list(
++   sslcert=paste0(Sys.glob('~'),'/.ssh/publickey.pem'),
++   sslkey=paste0(Sys.glob('~'),'/.ssh/privatekey.pem'),
++   ssl.verifyhost=0,
++   ssl.verifypeer=0,
++   sslversion=3)
+> 
+> ncds <- opal.login(url='https://lamp-api-32.rcs.le.ac.uk:8443', opts=credentials)
+> opals<-list(ncds)
+> 
+> # ASSIGN AGE DATA FROM OPAL DATASOURCE TO R
+> datashield.assign(ncds, 'L', 'hop.HOP')
+> 
+> # CHANGE THE FORMAT OF THE ASSIGNED DATA INTO A DATAFRAME
+> datashield.assign(opals, "D", quote(data.frame(as.list(L))))
+> 
+> # DISPLAY THE NAMES OF THE VARIABLES
+> datashield.aggregate(opals, quote(colnames(D)))
+[[1]]
+ [1] "ID__"                      "HLTH_OBESE_STRICT"        
+ [3] "HLTH_OBESE_MODERATE"       "PM_BMI_CATEGORIAL"        
+ [5] "PM_BMI_CONTINUOUS"         "PM_HEIGHT_MEASURE"        
+ [7] "PM_WEIGHT_MEASURE"         "METABSYNDR_NBR_STRICT"    
+ [9] "METABSYNDR_NBR_MODERATE"   "PM_SYSTOLIC_MEASURE"      
+[11] "PM_DIASTOLIC_MEASURE"      "LAB_GLUC_FASTING"         
+[13] "LAB_GLUC_NONFASTING"       "LAB_HDL"                  
+[15] "LAB_TRIG"                  "DIS_CVA"                  
+[17] "DIS_DIAB"                  "DIS_DIAB_TYPE"            
+[19] "DIS_HBP"                   "DIS_AMI"                  
+[21] "MEDI_HBP"                  "MEDI_DIAB"                
+[23] "MEDI_LPD"                  "MEDI_NAME_LPD_FIBR_NICO"  
+[25] "GENDER"                    "AGE_YRS"                  
+[27] "AGE_YRS_CATEGORICAL"       "BRLOCA_CNTRY"             
+[29] "RES_CNTRY"                 "RES_REG"                  
+[31] "EDU_NUMYRS"                "EDU_HIGHEST"              
+[33] "EDU_PRIMARY_COMPLETED"     "EDU_SECONDARY_COMPLETED"  
+[35] "EDU_POST_SEC_COMPLETED"    "EDU_TERTIARY_COMPLETED"   
+[37] "ALC_CURRENT"               "ALC_BEER_CURRENT_QTY"     
+[39] "ALC_WINE_CURRENT_QTY"      "ALC_SPIRITS_CURRENT_QTY"  
+[41] "ALC_CURRENT_QTY_TOTAL"     "SMK_TBC_EVER"             
+[43] "SMK_TBC_CURRENT"           "SMK_CIG_EVER"             
+[45] "SMK_CIG_CURRENT"           "SMK_CIG_CURRENT_QTY"      
+[47] "SMK_CIGAR_CURRENT"         "SMK_PIPE_CURRENT"         
+[49] "HOUSEHOLD_INCOME"          "HOUSEHOLD_NUM_PPL"        
+[51] "MARITAL_STATUS"            "LIVING_PARTNER"           
+[53] "WORK_STATUS_CURRENT"       "WORK_JOB_ISCO88"          
+[55] "WORK_STUDENT"              "WORK_RETIRED"             
+[57] "WORK_WEEK_HOURS_NUM"       "PM_HIP_SIZE"              
+[59] "PM_WAIST_SIZE"             "ADM_YRINT"                
+[61] "AGE_DOB"                   "LAB_TSC"                  
+[63] "LAB_CR"                    "LAB_hsCRP"                
+[65] "LAB_mALB"                  "WH_LIVEBIRTHS"            
+[67] "ALC_CURRENT_QTY_LEVEL"     "FOOD_RAW_VEGETABLES"      
+[69] "FOOD_COOKED_VEGETABLES"    "FOOD_POTATOES"            
+[71] "FOOD_FRUITS"               "FOOD_BREAD_ROLLS"         
+[73] "FOOD_RICE_PASTA"           "FOOD_BREAKFAST_CEREALS"   
+[75] "FOOD_BAKERY_PRODUCTS"      "FOOD_FISH"                
+[77] "FOOD_MEAT_PRODUCTS"        "FOOD_POULTRY_PRODUCTS"    
+[79] "FOOD_MILK_PRODUCTS"        "FOOD_MILK"                
+[81] "FOOD_CHEESE"               "FOOD_EGGS"                
+[83] "FOOD_CHOCOLATE_SWEETS"     "FOOD_SUGAR_PRODUCTS"      
+[85] "FOOD_CHOCOLATE"            "FOOD_NUTS"                
+[87] "FOOD_SALTED_SNACKS"        "DRINKS_SOFT_DRINKS"       
+[89] "DRINKS_COFFEE"             "DRINKS_TEA"               
+[91] "DIET_VEGETARIAN"           "DIET_VEGETARIAN_TYPE"     
+[93] "DIET_NON.GLUTEN"           "DIET_LOW.SALT"            
+[95] "DIET_DIABETIC"             "DIET_CHOLESTEROL_LOWERING"
+[97] "DIET_WEIGHT_LOSS"         
+
+> 
+> #LOOK AT UNIVARIATE DISTRIBUTION IN MORE DETAIL
+> datashield.aggregate(opals, quote(table.1d(D$DIS_CVA)))                     
+[[1]]
+          1D.TABLE
+Categories Counts
+         0   7133
+         1     19
+         9     58
+
+> datashield.aggregate(opals, quote(table.1d(D$MEDI_LPD)))
+[[1]]
+          1D.TABLE
+Categories Counts
+         0   7089
+         1    121
+         9      0
+
+> datashield.aggregate(opals, quote(table.1d(D$DIS_DIAB)))                     
+[[1]]
+          1D.TABLE
+Categories Counts
+         0   6982
+         1    170
+         9     58
+
+> datashield.aggregate(opals, quote(table.1d(D$DIS_AMI)))                     
+[[1]]
+          1D.TABLE
+Categories Counts
+         0   7128
+         1     24
+         9     58
+
+> datashield.aggregate(opals, quote(table.1d(D$GENDER)))                     
+[[1]]
+          1D.TABLE
+Categories Counts
+         0   3459
+         1   3751
+         9      0
+
+> datashield.aggregate(opals, quote(table.1d(D$PM_BMI_CATEGORIAL)))
+[[1]]
+          1D.TABLE
+Categories Counts
+         1   2453
+         2   2905
+         3   1733
+         9    119
+
+> 
+> datashield.aggregate(opals,quote(quantile.mean.ds(D$LAB_TSC)))
+[[1]]
+     5%      10     25%     50%     75%     90%     95%    Mean 
+4.30000 4.60000 5.10000 5.80000 6.50000 7.30000 7.80000 5.87193 
+
+> datashield.aggregate(opals,quote(quantile.mean.ds(D$LAB_TRIG)))
+[[1]]
+      5%       10      25%      50%      75%      90%      95%     Mean 
+0.700000 0.800000 1.100000 1.600000 2.500000 3.600000 4.500000 2.025533 
+
+> datashield.aggregate(opals,quote(quantile.mean.ds(D$LAB_HDL)))
+[[1]]
+      5%       10      25%      50%      75%      90%      95%     Mean 
+1.000000 1.100000 1.300000 1.500000 1.800000 2.100000 2.300000 1.565813 
+
+> datashield.aggregate(opals,quote(quantile.mean.ds(D$LAB_GLUC_FASTING)))
+[[1]]
+      5%       10      25%      50%      75%      90%      95%     Mean 
+3.819600 4.063800 4.308000 4.552200 4.796400 5.040600 5.406900 4.612395 
+
+> datashield.aggregate(opals,quote(quantile.mean.ds(D$PM_BMI_CONTINUOUS)))
+[[1]]
+      5%       10      25%      50%      75%      90%      95%     Mean 
+20.77088 21.91572 23.97187 26.64524 29.89247 33.94127 36.54095 27.38826 
+
+> 
+> datashield.histogram(opals,quote(D$LAB_HDL))
+> datashield.histogram(opals,quote(D$PM_BMI_CONTINUOUS))
+> 
+> datashield.aggregate(opals, quote(mean.a.by.b(D$PM_BMI_CONTINUOUS,D$PM_BMI_CATEGORIAL)))
+[[1]]
+       1        2        3        9 
+22.69730 27.29961 34.17676      NaN 
+
+> 
+> #Question 1
+> datashield.histogram(opals,quote(D$LAB_TSC))
+> datashield.aggregate(opals, quote(mean.a.by.b(D$LAB_TSC,D$GENDER)))
+[[1]]
+       0        1        9 
+6.080236 5.673479       NA 
+
+> datashield.aggregate(opals, quote(var.a.by.b(D$LAB_TSC,D$GENDER)))
+[[1]]
+        0         1         9 
+1.2884940 0.9637716        NA 
+
+> 
+> 
+> glm.mod1<-datashield.glm(opals, D$LAB_TSC ~ D$GENDER, quote(gaussian),quote(20))
+--------------------------------------------
+Iteration 1 
+
+SUMMARY OF MODEL STATE after iteration No 1 
+
+Current deviance 216244.4 on 6065 degrees of freedom 
+Convergence criterion     FALSE  ( 4.61977e+94 )
+
+beta
+[1]  6.0802365 -0.4067572
+Information matrix overall
+            (Intercept) D$GENDER1
+(Intercept)        6067      3107
+D$GENDER1          3107      3107
+Score vector overall
+               [,1]
+(Intercept) 35625.0
+D$GENDER1   17627.5
+Current Deviance
+[1] 216244.4
+--------------------------------------------
+--------------------------------------------
+Iteration 2 
+
+SUMMARY OF MODEL STATE after iteration No 2 
+
+Current deviance 6806.129 on 6065 degrees of freedom 
+Convergence criterion     FALSE  ( 30.77157 )
+
+beta
+[1]  6.0802365 -0.4067572
+Information matrix overall
+            (Intercept) D$GENDER1
+(Intercept)        6067      3107
+D$GENDER1          3107      3107
+Score vector overall
+                     [,1]
+(Intercept) -1.739657e-10
+D$GENDER1    4.254375e-11
+Current Deviance
+[1] 6806.129
+--------------------------------------------
+--------------------------------------------
+Iteration 3 
+
+SUMMARY OF MODEL STATE after iteration No 3 
+
+Current deviance 6806.129 on 6065 degrees of freedom 
+Convergence criterion     TRUE  ( 0 )
+
+beta
+[1]  6.0802365 -0.4067572
+Information matrix overall
+            (Intercept) D$GENDER1
+(Intercept)        6067      3107
+D$GENDER1          3107      3107
+Score vector overall
+                     [,1]
+(Intercept) -2.089529e-11
+D$GENDER1   -9.680257e-12
+Current Deviance
+[1] 6806.129
+--------------------------------------------
+> glm.mod1
+$formula
+D$LAB_TSC ~ D$GENDER
+
+$coefficients
+              Estimate Std. Error   z-value      p-value
+(Intercept)  6.0802365 0.01947103 312.27100 0.000000e+00
+D$GENDER1   -0.4067572 0.02720854 -14.94962 1.566438e-50
+
+$dev
+[1] 6806.129
+
+$nsubs
+[1] 6067
+
+$df
+[1] 6065
+
+$iter
+[1] 3
+
+attr(,"class")
+[1] "glmds"
+> 
+> 
+> #To determine if there is a difference across numerical variables between more than one group an ANOVA is used, this is can be viewed again using the boxplot function
+> datashield.assign(opals, 'bmi.f', quote(factor.create.3(D$PM_BMI_CATEGORIAL)))
+> datashield.assign(opals, 'bmi.n', quote(as.numeric(D$PM_BMI_CATEGORIAL)))
+> 
+> datashield.aggregate(opals, quote(table.1d(bmi.f)))
+[[1]]
+          1D.TABLE
+Categories Counts
+         1   2453
+         2   2905
+         3   1733
+         9    119
+
+> 
+> #For a better interpretation of the results we can use the summary function on the outcome of the analysis q21.
+> glm.mod2<-datashield.glm(opals, D$LAB_GLUC_FASTING ~ bmi.f, quote(gaussian),quote(20))
+--------------------------------------------
+Iteration 1 
+
+SUMMARY OF MODEL STATE after iteration No 1 
+
+Current deviance 134989.2 on 6136 degrees of freedom 
+Convergence criterion     FALSE  ( 7.400588e+94 )
+
+beta
+[1] 4.4672433 0.1007021 0.4200159 0.4046659
+Information matrix overall
+            (Intercept) bmi.f2 bmi.f3 bmi.f9
+(Intercept)        6140   2497   1450     76
+bmi.f2             2497   2497      0      0
+bmi.f3             1450      0   1450      0
+bmi.f9               76      0      0     76
+Score vector overall
+                  [,1]
+(Intercept) 28320.1047
+bmi.f2      11406.1596
+bmi.f3       7086.5259
+bmi.f9        370.2651
+Current Deviance
+[1] 134989.2
+--------------------------------------------
+--------------------------------------------
+Iteration 2 
+
+SUMMARY OF MODEL STATE after iteration No 2 
+
+Current deviance 4201.467 on 6136 degrees of freedom 
+Convergence criterion     FALSE  ( 31.12832 )
+
+beta
+[1] 4.4672433 0.1007021 0.4200159 0.4046659
+Information matrix overall
+            (Intercept) bmi.f2 bmi.f3 bmi.f9
+(Intercept)        6140   2497   1450     76
+bmi.f2             2497   2497      0      0
+bmi.f3             1450      0   1450      0
+bmi.f9               76      0      0     76
+Score vector overall
+                     [,1]
+(Intercept)  1.636842e-10
+bmi.f2      -6.768541e-11
+bmi.f3       6.301182e-12
+bmi.f9       6.163958e-13
+Current Deviance
+[1] 4201.467
+--------------------------------------------
+--------------------------------------------
+Iteration 3 
+
+SUMMARY OF MODEL STATE after iteration No 3 
+
+Current deviance 4201.467 on 6136 degrees of freedom 
+Convergence criterion     TRUE  ( 0 )
+
+beta
+[1] 4.4672433 0.1007021 0.4200159 0.4046659
+Information matrix overall
+            (Intercept) bmi.f2 bmi.f3 bmi.f9
+(Intercept)        6140   2497   1450     76
+bmi.f2             2497   2497      0      0
+bmi.f3             1450      0   1450      0
+bmi.f9               76      0      0     76
+Score vector overall
+                     [,1]
+(Intercept) -1.795275e-11
+bmi.f2      -7.576162e-12
+bmi.f3      -3.994582e-12
+bmi.f9      -3.304024e-13
+Current Deviance
+[1] 4201.467
+--------------------------------------------
+> glm.mod2
+$formula
+D$LAB_GLUC_FASTING ~ bmi.f
+
+$coefficients
+             Estimate Std. Error    z-value      p-value
+(Intercept) 4.4672433 0.01798446 248.394650 0.000000e+00
+bmi.f2      0.1007021 0.02444707   4.119186 3.802123e-05
+bmi.f3      0.4200159 0.02820752  14.890210 3.815669e-50
+bmi.f9      0.4046659 0.09660729   4.188772 2.804681e-05
+
+$dev
+[1] 4201.467
+
+$nsubs
+[1] 6140
+
+$df
+[1] 6136
+
+$iter
+[1] 3
+
+attr(,"class")
+[1] "glmds"
+> 
+> #Question 3
+> #To determine a trend over two categorical factor variables we first create a table of those variables using the function table.
+> datashield.aggregate(opals, quote(table.2d(D$DIS_DIAB,D$PM_BMI_CATEGORIAL)))
+[[1]]
+    Var2
+Var1    1    2    3    9
+   0 2420 2838 1612  112
+   1   23   38  103    6
+   9   10   29   18    1
+
+> 
+> glm.mod3<-datashield.glm(opals, D$LAB_GLUC_FASTING ~ bmi.f, quote(gaussian),quote(20))
+--------------------------------------------
+Iteration 1 
+
+SUMMARY OF MODEL STATE after iteration No 1 
+
+Current deviance 134989.2 on 6136 degrees of freedom 
+Convergence criterion     FALSE  ( 7.400588e+94 )
+
+beta
+[1] 4.4672433 0.1007021 0.4200159 0.4046659
+Information matrix overall
+            (Intercept) bmi.f2 bmi.f3 bmi.f9
+(Intercept)        6140   2497   1450     76
+bmi.f2             2497   2497      0      0
+bmi.f3             1450      0   1450      0
+bmi.f9               76      0      0     76
+Score vector overall
+                  [,1]
+(Intercept) 28320.1047
+bmi.f2      11406.1596
+bmi.f3       7086.5259
+bmi.f9        370.2651
+Current Deviance
+[1] 134989.2
+--------------------------------------------
+--------------------------------------------
+Iteration 2 
+
+SUMMARY OF MODEL STATE after iteration No 2 
+
+Current deviance 4201.467 on 6136 degrees of freedom 
+Convergence criterion     FALSE  ( 31.12832 )
+
+beta
+[1] 4.4672433 0.1007021 0.4200159 0.4046659
+Information matrix overall
+            (Intercept) bmi.f2 bmi.f3 bmi.f9
+(Intercept)        6140   2497   1450     76
+bmi.f2             2497   2497      0      0
+bmi.f3             1450      0   1450      0
+bmi.f9               76      0      0     76
+Score vector overall
+                     [,1]
+(Intercept)  1.636842e-10
+bmi.f2      -6.768541e-11
+bmi.f3       6.301182e-12
+bmi.f9       6.163958e-13
+Current Deviance
+[1] 4201.467
+--------------------------------------------
+--------------------------------------------
+Iteration 3 
+
+SUMMARY OF MODEL STATE after iteration No 3 
+
+Current deviance 4201.467 on 6136 degrees of freedom 
+Convergence criterion     TRUE  ( 0 )
+
+beta
+[1] 4.4672433 0.1007021 0.4200159 0.4046659
+Information matrix overall
+            (Intercept) bmi.f2 bmi.f3 bmi.f9
+(Intercept)        6140   2497   1450     76
+bmi.f2             2497   2497      0      0
+bmi.f3             1450      0   1450      0
+bmi.f9               76      0      0     76
+Score vector overall
+                     [,1]
+(Intercept) -1.795275e-11
+bmi.f2      -7.576162e-12
+bmi.f3      -3.994582e-12
+bmi.f9      -3.304024e-13
+Current Deviance
+[1] 4201.467
+--------------------------------------------
+> glm.mod3
+$formula
+D$LAB_GLUC_FASTING ~ bmi.f
+
+$coefficients
+             Estimate Std. Error    z-value      p-value
+(Intercept) 4.4672433 0.01798446 248.394650 0.000000e+00
+bmi.f2      0.1007021 0.02444707   4.119186 3.802123e-05
+bmi.f3      0.4200159 0.02820752  14.890210 3.815669e-50
+bmi.f9      0.4046659 0.09660729   4.188772 2.804681e-05
+
+$dev
+[1] 4201.467
+
+$nsubs
+[1] 6140
+
+$df
+[1] 6136
+
+$iter
+[1] 3
+
+attr(,"class")
+[1] "glmds"
+>                     
+> glm.mod4<-datashield.glm(opals, D$LAB_GLUC_FASTING ~ bmi.n, quote(gaussian),quote(20))
+--------------------------------------------
+Iteration 1 
+
+SUMMARY OF MODEL STATE after iteration No 1 
+
+Current deviance 134989.2 on 6138 degrees of freedom 
+Convergence criterion     FALSE  ( 7.400588e+94 )
+
+beta
+[1] 4.2393196 0.1947031
+Information matrix overall
+            (Intercept) bmi.n
+(Intercept)        6140 11765
+bmi.n             11765 26371
+Score vector overall
+                [,1]
+(Intercept) 28320.10
+bmi.n       55010.11
+Current Deviance
+[1] 134989.2
+--------------------------------------------
+--------------------------------------------
+Iteration 2 
+
+SUMMARY OF MODEL STATE after iteration No 2 
+
+Current deviance 4220.561 on 6138 degrees of freedom 
+Convergence criterion     FALSE  ( 30.98297 )
+
+beta
+[1] 4.2393196 0.1947031
+Information matrix overall
+            (Intercept) bmi.n
+(Intercept)        6140 11765
+bmi.n             11765 26371
+Score vector overall
+                    [,1]
+(Intercept) 1.382432e-10
+bmi.n       6.426806e-10
+Current Deviance
+[1] 4220.561
+--------------------------------------------
+--------------------------------------------
+Iteration 3 
+
+SUMMARY OF MODEL STATE after iteration No 3 
+
+Current deviance 4220.561 on 6138 degrees of freedom 
+Convergence criterion     TRUE  ( 2.154863e-16 )
+
+beta
+[1] 4.2393196 0.1947031
+Information matrix overall
+            (Intercept) bmi.n
+(Intercept)        6140 11765
+bmi.n             11765 26371
+Score vector overall
+                    [,1]
+(Intercept) 2.129141e-11
+bmi.n       3.667822e-11
+Current Deviance
+[1] 4220.561
+--------------------------------------------
+> glm.mod4
+$formula
+D$LAB_GLUC_FASTING ~ bmi.n
+
+$coefficients
+             Estimate Std. Error   z-value      p-value
+(Intercept) 4.2393196 0.02777640 152.62309 0.000000e+00
+bmi.n       0.1947031 0.01340284  14.52701 8.171361e-48
+
+$dev
+[1] 4220.561
+
+$nsubs
+[1] 6140
+
+$df
+[1] 6138
+
+$iter
+[1] 3
+
+attr(,"class")
+[1] "glmds"
+> 
+> #We can then formally test the differing proportions across the categories using the saved table object q3 and the chi squared function chisq.test(..) .
+> #4. To determine if total serum cholesterol levels are associated with HDL cholesterol levels
+> #For example, this can be carried out by plotting a scatter plot or performing a correlation or
+> #using linear regression using LAB_TSC as an outcome and LAB_HDL  as a covariate other covariates
+> #can be added to determine other significant variables correlated with total serum cholesterol.
+> datashield.heatmap.plot(opals, quote(D$LAB_TSC),quote(D$LAB_HDL))
+> datashield.contour.plot(opals, quote(D$LAB_TSC),quote(D$LAB_HDL))
+> 
+> datashield.heatmap.plot(opals, quote(D$LAB_TSC),quote(D$LAB_GLUC_FASTING))
+> 
+> #Question5
+> #To determine predictors of binary outcomes we need to use the function glm.
+> #The glm function can be used to analyse any input or output whether it be categorical or numerical.  If the outcome to analyse is numeric then we use the gaussian option of the glm.  If the outcome contains two categories we can use the binomial option.  So the type of glm function we need to answer research question 5 is the one which has family input binomial.  
+> glm.mod5<-datashield.glm(opals, D$DIS_DIAB ~ bmi.f, quote(binomial),quote(20))
+--------------------------------------------
+Iteration 1 
+
+SUMMARY OF MODEL STATE after iteration No 1 
+
+Current deviance 9995.182 on 7206 degrees of freedom 
+Convergence criterion     FALSE  ( 9.994715e+95 )
+
+beta
+[1] -1.94618834  0.03844307  0.22547282  0.18148246
+Information matrix overall
+            (Intercept) bmi.f2 bmi.f3 bmi.f9
+(Intercept)     1802.50 726.25 433.25  29.75
+bmi.f2           726.25 726.25   0.00   0.00
+bmi.f3           433.25   0.00 433.25   0.00
+bmi.f9            29.75   0.00   0.00  29.75
+Score vector overall
+               [,1]
+(Intercept) -3377.0
+bmi.f2      -1385.5
+bmi.f3       -745.5
+bmi.f9        -52.5
+Current Deviance
+[1] 9995.182
+--------------------------------------------
+--------------------------------------------
+Iteration 2 
+
+SUMMARY OF MODEL STATE after iteration No 2 
+
+Current deviance 2892.312 on 7206 degrees of freedom 
+Convergence criterion     FALSE  ( 2.45569 )
+
+beta
+[1] -2.9659820  0.1147728  0.6086614  0.5012797
+Information matrix overall
+            (Intercept)   bmi.f2   bmi.f3   bmi.f9
+(Intercept)   833.11338 326.9079 223.1101 14.85441
+bmi.f2        326.90793 326.9079   0.0000  0.00000
+bmi.f3        223.11015   0.0000 223.1101  0.00000
+bmi.f9         14.85441   0.0000   0.0000 14.85441
+Score vector overall
+                  [,1]
+(Intercept) -734.40730
+bmi.f2      -308.42585
+bmi.f3      -142.03305
+bmi.f9       -10.39803
+Current Deviance
+[1] 2892.312
+--------------------------------------------
+--------------------------------------------
+Iteration 3 
+
+SUMMARY OF MODEL STATE after iteration No 3 
+
+Current deviance 2088.484 on 7206 degrees of freedom 
+Convergence criterion     FALSE  ( 0.3848678 )
+
+beta
+[1] -3.7287214  0.2664000  1.1604731  0.9933976
+Information matrix overall
+            (Intercept)   bmi.f2   bmi.f3   bmi.f9
+(Intercept)  409.791471 150.0015 136.9172 8.595151
+bmi.f2       150.001493 150.0015   0.0000 0.000000
+bmi.f3       136.917195   0.0000 136.9172 0.000000
+bmi.f9         8.595151   0.0000   0.0000 8.595151
+Score vector overall
+                   [,1]
+(Intercept) -210.037463
+bmi.f2       -91.667741
+bmi.f3       -28.879633
+bmi.f9        -2.326033
+Current Deviance
+[1] 2088.484
+--------------------------------------------
+--------------------------------------------
+Iteration 4 
+
+SUMMARY OF MODEL STATE after iteration No 4 
+
+Current deviance 1936.711 on 7206 degrees of freedom 
+Convergence criterion     FALSE  ( 0.07836216 )
+
+beta
+[1] -4.1655269  0.4542213  1.5762781  1.3935423
+Information matrix overall
+            (Intercept)   bmi.f2   bmi.f3   bmi.f9
+(Intercept)  263.261277 85.63693 114.6192 6.807933
+bmi.f2        85.636932 85.63693   0.0000 0.000000
+bmi.f3       114.619231  0.00000 114.6192 0.000000
+bmi.f9         6.807933  0.00000   0.0000 6.807933
+Score vector overall
+                   [,1]
+(Intercept) -48.5261162
+bmi.f2      -21.3222395
+bmi.f3       -2.4070570
+bmi.f9       -0.2495843
+Current Deviance
+[1] 1936.711
+--------------------------------------------
+--------------------------------------------
+Iteration 5 
+
+SUMMARY OF MODEL STATE after iteration No 5 
+
+Current deviance 1918.877 on 7206 degrees of freedom 
+Convergence criterion     FALSE  ( 0.009293595 )
+
+beta
+[1] -4.2872080  0.5416182  1.6977676  1.5146194
+Information matrix overall
+            (Intercept)   bmi.f2   bmi.f3   bmi.f9
+(Intercept)  223.747024 67.66574 112.5702 6.591748
+bmi.f2        67.665735 67.66574   0.0000 0.000000
+bmi.f3       112.570201  0.00000 112.5702 0.000000
+bmi.f9         6.591748  0.00000   0.0000 6.591748
+Score vector overall
+                    [,1]
+(Intercept) -6.837798108
+bmi.f2      -2.319864077
+bmi.f3      -0.021568486
+bmi.f9      -0.003980982
+Current Deviance
+[1] 1918.877
+--------------------------------------------
+--------------------------------------------
+Iteration 6 
+
+SUMMARY OF MODEL STATE after iteration No 6 
+
+Current deviance 1918.229 on 7206 degrees of freedom 
+Convergence criterion     FALSE  ( 0.0003377583 )
+
+beta
+[1] -4.2949857  0.5488236  1.7055453  1.5223970
+Information matrix overall
+            (Intercept)   bmi.f2   bmi.f3   bmi.f9
+(Intercept)  217.434672 65.49048 112.5516 6.588236
+bmi.f2        65.490485 65.49048   0.0000 0.000000
+bmi.f3       112.551646  0.00000 112.5516 0.000000
+bmi.f9         6.588236  0.00000   0.0000 6.588236
+Score vector overall
+                     [,1]
+(Intercept) -2.926265e-01
+bmi.f2      -3.748115e-02
+bmi.f3      -1.777595e-06
+bmi.f9      -1.060457e-06
+Current Deviance
+[1] 1918.229
+--------------------------------------------
+--------------------------------------------
+Iteration 7 
+
+SUMMARY OF MODEL STATE after iteration No 7 
+
+Current deviance 1918.227 on 7206 degrees of freedom 
+Convergence criterion     FALSE  ( 1.048244e-06 )
+
+beta
+[1] -4.295015  0.548853  1.705575  1.522427
+Information matrix overall
+            (Intercept)   bmi.f2   bmi.f3   bmi.f9
+(Intercept)  217.151614 65.45474 112.5516 6.588235
+bmi.f2        65.454743 65.45474   0.0000 0.000000
+bmi.f3       112.551645  0.00000 112.5516 0.000000
+bmi.f9         6.588235  0.00000   0.0000 6.588235
+Score vector overall
+                     [,1]
+(Intercept) -9.731765e-04
+bmi.f2      -1.022872e-05
+bmi.f3      -3.490541e-13
+bmi.f9      -1.340317e-13
+Current Deviance
+[1] 1918.227
+--------------------------------------------
+--------------------------------------------
+Iteration 8 
+
+SUMMARY OF MODEL STATE after iteration No 8 
+
+Current deviance 1918.227 on 7206 degrees of freedom 
+Convergence criterion     TRUE  ( 1.484777e-11 )
+
+beta
+[1] -4.295015  0.548853  1.705575  1.522427
+Information matrix overall
+            (Intercept)   bmi.f2   bmi.f3   bmi.f9
+(Intercept)  217.150667 65.45473 112.5516 6.588235
+bmi.f2        65.454733 65.45473   0.0000 0.000000
+bmi.f3       112.551645  0.00000 112.5516 0.000000
+bmi.f9         6.588235  0.00000   0.0000 6.588235
+Score vector overall
+                     [,1]
+(Intercept) -1.385666e-08
+bmi.f2      -3.477843e-13
+bmi.f3       6.998846e-13
+bmi.f9       6.068757e-14
+Current Deviance
+[1] 1918.227
+--------------------------------------------
+> glm.mod5
+$formula
+D$DIS_DIAB ~ bmi.f
+
+$coefficients
+             Estimate Std. Error    z-value       p-value
+(Intercept) -4.295015  0.1752605 -24.506460 1.260544e-132
+bmi.f2       0.548853  0.2144621   2.559208  1.049111e-02
+bmi.f3       1.705575  0.1990002   8.570721  1.028390e-17
+bmi.f9       1.522427  0.4272025   3.563712  3.656475e-04
+
+$dev
+[1] 1918.227
+
+$nsubs
+[1] 7210
+
+$df
+[1] 7206
+
+$iter
+[1] 8
+
+attr(,"class")
+[1] "glmds"
+> 
+> datashield.assign(opals, 'sex.f', quote(factor.create.3(D$GENDER)))
+> 
+> glm.mod6<-datashield.glm(opals, D$DIS_DIAB ~ sex.f+D$PM_BMI_CONTINUOUS+D$LAB_HDL, quote(binomial),quote(20))
+--------------------------------------------
+Iteration 1 
+
+SUMMARY OF MODEL STATE after iteration No 1 
+
+Current deviance 8291.427 on 5977 degrees of freedom 
+Convergence criterion     FALSE  ( 1.204844e+96 )
+
+beta
+[1] -2.38808048 -0.01467900  0.02077924 -0.03161315
+Information matrix overall
+                    (Intercept)    sex.f1 D$PM_BMI_CONTINUOUS D$LAB_HDL
+(Intercept)             1495.25   765.250            40838.63  2343.500
+sex.f1                   765.25   765.250            20560.30  1297.425
+D$PM_BMI_CONTINUOUS    40838.63 20560.295          1150712.98 62957.875
+D$LAB_HDL               2343.50  1297.425            62957.87  3909.940
+Score vector overall
+                         [,1]
+(Intercept)          -2807.50
+sex.f1               -1452.50
+D$PM_BMI_CONTINUOUS -75907.09
+D$LAB_HDL            -4430.90
+Current Deviance
+[1] 8291.427
+--------------------------------------------
+--------------------------------------------
+Iteration 2 
+
+SUMMARY OF MODEL STATE after iteration No 2 
+
+Current deviance 2363.38 on 5977 degrees of freedom 
+Convergence criterion     FALSE  ( 2.508185 )
+
+beta
+[1] -4.09652391 -0.05163938  0.05488725 -0.10082042
+Information matrix overall
+                    (Intercept)    sex.f1 D$PM_BMI_CONTINUOUS  D$LAB_HDL
+(Intercept)            689.3734  347.6859           19093.916  1070.0742
+sex.f1                 347.6859  347.6859            9512.048   583.3425
+D$PM_BMI_CONTINUOUS  19093.9162 9512.0475          546448.678 29146.9713
+D$LAB_HDL             1070.0742  583.3425           29146.971  1767.4527
+Score vector overall
+                           [,1]
+(Intercept)           -613.4077
+sex.f1                -322.7868
+D$PM_BMI_CONTINUOUS -16351.3527
+D$LAB_HDL             -977.8974
+Current Deviance
+[1] 2363.38
+--------------------------------------------
+--------------------------------------------
+Iteration 3 
+
+SUMMARY OF MODEL STATE after iteration No 3 
+
+Current deviance 1674.135 on 5977 degrees of freedom 
+Convergence criterion     FALSE  ( 0.4116775 )
+
+beta
+[1] -5.57438822 -0.14332925  0.09790172 -0.25774082
+Information matrix overall
+                    (Intercept)    sex.f1 D$PM_BMI_CONTINUOUS  D$LAB_HDL
+(Intercept)            337.6854  164.7431            9668.676   512.2184
+sex.f1                 164.7431  164.7431            4711.111   269.3552
+D$PM_BMI_CONTINUOUS   9668.6759 4711.1114          287081.773 14418.6963
+D$LAB_HDL              512.2184  269.3552           14418.696   825.7796
+Score vector overall
+                           [,1]
+(Intercept)          -178.64309
+sex.f1                -98.19464
+D$PM_BMI_CONTINUOUS -4634.86983
+D$LAB_HDL            -291.05549
+Current Deviance
+[1] 1674.135
+--------------------------------------------
+--------------------------------------------
+Iteration 4 
+
+SUMMARY OF MODEL STATE after iteration No 4 
+
+Current deviance 1532.822 on 5977 degrees of freedom 
+Convergence criterion     FALSE  ( 0.09218546 )
+
+beta
+[1] -6.1336076 -0.2525015  0.1210164 -0.4562228
+Information matrix overall
+                    (Intercept)     sex.f1 D$PM_BMI_CONTINUOUS D$LAB_HDL
+(Intercept)           214.53528   99.00227            6441.057  313.7708
+sex.f1                 99.00227   99.00227            3026.697  155.2402
+D$PM_BMI_CONTINUOUS  6441.05733 3026.69728          201283.105 9266.6925
+D$LAB_HDL             313.77076  155.24019            9266.692  486.5074
+Score vector overall
+                           [,1]
+(Intercept)           -44.17536
+sex.f1                -27.02349
+D$PM_BMI_CONTINUOUS -1119.06956
+D$LAB_HDL             -74.78080
+Current Deviance
+[1] 1532.822
+--------------------------------------------
+--------------------------------------------
+Iteration 5 
+
+SUMMARY OF MODEL STATE after iteration No 5 
+
+Current deviance 1514.324 on 5977 degrees of freedom 
+Convergence criterion     FALSE  ( 0.01221461 )
+
+beta
+[1] -6.1765904 -0.2888061  0.1252657 -0.5342702
+Information matrix overall
+                    (Intercept)    sex.f1 D$PM_BMI_CONTINUOUS D$LAB_HDL
+(Intercept)            178.3351   77.4370            5504.280  253.3490
+sex.f1                  77.4370   77.4370            2469.956  117.5654
+D$PM_BMI_CONTINUOUS   5504.2796 2469.9562          176920.826 7702.5450
+D$LAB_HDL              253.3490  117.5654            7702.545  380.5595
+Score vector overall
+                           [,1]
+(Intercept)           -6.860587
+sex.f1                -4.819880
+D$PM_BMI_CONTINUOUS -175.635099
+D$LAB_HDL            -12.129113
+Current Deviance
+[1] 1514.324
+--------------------------------------------
+--------------------------------------------
+Iteration 6 
+
+SUMMARY OF MODEL STATE after iteration No 6 
+
+Current deviance 1513.633 on 5977 degrees of freedom 
+Convergence criterion     FALSE  ( 0.0004564463 )
+
+beta
+[1] -6.1753812 -0.2906697  0.1254230 -0.5392891
+Information matrix overall
+                    (Intercept)     sex.f1 D$PM_BMI_CONTINUOUS D$LAB_HDL
+(Intercept)           171.86940   72.98343            5334.580  242.0672
+sex.f1                 72.98343   72.98343            2350.107  109.7929
+D$PM_BMI_CONTINUOUS  5334.57964 2350.10668          172410.072 7404.6778
+D$LAB_HDL             242.06722  109.79293            7404.678  360.1848
+Score vector overall
+                          [,1]
+(Intercept)         -0.3042476
+sex.f1              -0.2292494
+D$PM_BMI_CONTINUOUS -7.9813027
+D$LAB_HDL           -0.5552649
+Current Deviance
+[1] 1513.633
+--------------------------------------------
+--------------------------------------------
+Iteration 7 
+
+SUMMARY OF MODEL STATE after iteration No 7 
+
+Current deviance 1513.632 on 5977 degrees of freedom 
+Convergence criterion     FALSE  ( 1.052872e-06 )
+
+beta
+[1] -6.1753726 -0.2906738  0.1254232 -0.5393036
+Information matrix overall
+                    (Intercept)     sex.f1 D$PM_BMI_CONTINUOUS D$LAB_HDL
+(Intercept)           171.57172   72.76416            5326.637  241.5303
+sex.f1                 72.76416   72.76416            2344.066  109.4076
+D$PM_BMI_CONTINUOUS  5326.63661 2344.06624          172193.601 7390.2633
+D$LAB_HDL             241.53033  109.40759            7390.263  359.1934
+Score vector overall
+                             [,1]
+(Intercept)         -0.0007477452
+sex.f1              -0.0005643410
+D$PM_BMI_CONTINUOUS -0.0199944932
+D$LAB_HDL           -0.0013905300
+Current Deviance
+[1] 1513.632
+--------------------------------------------
+--------------------------------------------
+Iteration 8 
+
+SUMMARY OF MODEL STATE after iteration No 8 
+
+Current deviance 1513.632 on 5977 degrees of freedom 
+Convergence criterion     TRUE  ( 6.675066e-12 )
+
+beta
+[1] -6.1753726 -0.2906738  0.1254232 -0.5393036
+Information matrix overall
+                    (Intercept)     sex.f1 D$PM_BMI_CONTINUOUS D$LAB_HDL
+(Intercept)           171.57099   72.76362            5326.617  241.5290
+sex.f1                 72.76362   72.76362            2344.051  109.4066
+D$PM_BMI_CONTINUOUS  5326.61696 2344.05128          172193.057 7390.2270
+D$LAB_HDL             241.52899  109.40663            7390.227  359.1908
+Score vector overall
+                             [,1]
+(Intercept)         -4.765094e-09
+sex.f1              -3.500538e-09
+D$PM_BMI_CONTINUOUS -1.288512e-07
+D$LAB_HDL           -8.988954e-09
+Current Deviance
+[1] 1513.632
+--------------------------------------------
+> glm.mod6
+$formula
+D$DIS_DIAB ~ sex.f + D$PM_BMI_CONTINUOUS + D$LAB_HDL
+
+$coefficients
+                      Estimate Std. Error    z-value      p-value
+(Intercept)         -6.1753726 0.61197059 -10.090963 6.057232e-24
+sex.f1              -0.2906738 0.16467400  -1.765147 7.753912e-02
+D$PM_BMI_CONTINUOUS  0.1254232 0.01311112   9.566172 1.109369e-21
+D$LAB_HDL           -0.5393036 0.25187597  -2.141147 3.226215e-02
+
+$dev
+[1] 1513.632
+
+$nsubs
+[1] 5981
+
+$df
+[1] 5977
+
+$iter
+[1] 8
+
+attr(,"class")
+[1] "glmds"
+> 
+> glm.mod7<-datashield.glm(opals, D$DIS_DIAB ~ sex.f*D$PM_BMI_CONTINUOUS+D$LAB_HDL, quote(binomial),quote(20))
+--------------------------------------------
+Iteration 1 
+
+SUMMARY OF MODEL STATE after iteration No 1 
+
+Current deviance 8291.427 on 5976 degrees of freedom 
+Convergence criterion     FALSE  ( 1.204844e+96 )
+
+beta
+[1] -2.59759626  0.31381229  0.02848554 -0.03479100 -0.01193400
+Information matrix overall
+                           (Intercept)    sex.f1 D$PM_BMI_CONTINUOUS D$LAB_HDL
+(Intercept)                    1495.25   765.250            40838.63  2343.500
+sex.f1                          765.25   765.250            20560.30  1297.425
+D$PM_BMI_CONTINUOUS           40838.63 20560.295          1150712.98 62957.875
+D$LAB_HDL                      2343.50  1297.425            62957.87  3909.940
+sex.f1:D$PM_BMI_CONTINUOUS    20560.30 20560.295           575263.82 34182.928
+                           sex.f1:D$PM_BMI_CONTINUOUS
+(Intercept)                                  20560.30
+sex.f1                                       20560.30
+D$PM_BMI_CONTINUOUS                         575263.82
+D$LAB_HDL                                    34182.93
+sex.f1:D$PM_BMI_CONTINUOUS                  575263.82
+Score vector overall
+                                [,1]
+(Intercept)                 -2807.50
+sex.f1                      -1452.50
+D$PM_BMI_CONTINUOUS        -75907.09
+D$LAB_HDL                   -4430.90
+sex.f1:D$PM_BMI_CONTINUOUS -38623.03
+Current Deviance
+[1] 8291.427
+--------------------------------------------
+--------------------------------------------
+Iteration 2 
+
+SUMMARY OF MODEL STATE after iteration No 2 
+
+Current deviance 2361.703 on 5976 degrees of freedom 
+Convergence criterion     FALSE  ( 2.510676 )
+
+beta
+[1] -4.61047438  0.76244892  0.07350952 -0.10950808 -0.02898787
+Information matrix overall
+                           (Intercept)    sex.f1 D$PM_BMI_CONTINUOUS  D$LAB_HDL
+(Intercept)                   689.4371  347.4400           19095.767  1070.1077
+sex.f1                        347.4400  347.4400            9472.399   583.7689
+D$PM_BMI_CONTINUOUS         19095.7674 9472.3991          546459.292 29141.9071
+D$LAB_HDL                    1070.1077  583.7689           29141.907  1767.7771
+sex.f1:D$PM_BMI_CONTINUOUS   9472.3991 9472.3991          269518.604 15594.0244
+                           sex.f1:D$PM_BMI_CONTINUOUS
+(Intercept)                                  9472.399
+sex.f1                                       9472.399
+D$PM_BMI_CONTINUOUS                        269518.604
+D$LAB_HDL                                   15594.024
+sex.f1:D$PM_BMI_CONTINUOUS                 269518.604
+Score vector overall
+                                  [,1]
+(Intercept)                  -613.6075
+sex.f1                       -322.1535
+D$PM_BMI_CONTINUOUS        -16357.7482
+D$LAB_HDL                    -978.0332
+sex.f1:D$PM_BMI_CONTINUOUS  -8443.7942
+Current Deviance
+[1] 2361.703
+--------------------------------------------
+--------------------------------------------
+Iteration 3 
+
+SUMMARY OF MODEL STATE after iteration No 3 
+
+Current deviance 1670.729 on 5976 degrees of freedom 
+Convergence criterion     FALSE  ( 0.4135517 )
+
+beta
+[1] -6.33348521  1.09300333  0.12456355 -0.27346701 -0.04213309
+Information matrix overall
+                           (Intercept)    sex.f1 D$PM_BMI_CONTINUOUS  D$LAB_HDL
+(Intercept)                   337.7713  163.9456            9669.687   512.1685
+sex.f1                        163.9456  163.9456            4634.785   269.3133
+D$PM_BMI_CONTINUOUS          9669.6865 4634.7850          286944.127 14406.5208
+D$LAB_HDL                     512.1685  269.3133           14406.521   825.9679
+sex.f1:D$PM_BMI_CONTINUOUS   4634.7850 4634.7850          137403.691  7446.2474
+                           sex.f1:D$PM_BMI_CONTINUOUS
+(Intercept)                                  4634.785
+sex.f1                                       4634.785
+D$PM_BMI_CONTINUOUS                        137403.691
+D$LAB_HDL                                    7446.247
+sex.f1:D$PM_BMI_CONTINUOUS                 137403.691
+Score vector overall
+                                 [,1]
+(Intercept)                 -179.0140
+sex.f1                       -96.7442
+D$PM_BMI_CONTINUOUS        -4647.5501
+D$LAB_HDL                   -291.2455
+sex.f1:D$PM_BMI_CONTINUOUS -2465.8040
+Current Deviance
+[1] 1670.729
+--------------------------------------------
+--------------------------------------------
+Iteration 4 
+
+SUMMARY OF MODEL STATE after iteration No 4 
+
+Current deviance 1529.587 on 5976 degrees of freedom 
+Convergence criterion     FALSE  ( 0.09226898 )
+
+beta
+[1] -6.9249381  1.0527238  0.1478720 -0.4714385 -0.0425581
+Information matrix overall
+                           (Intercept)     sex.f1 D$PM_BMI_CONTINUOUS D$LAB_HDL
+(Intercept)                  214.14271   98.41899            6422.808  313.1184
+sex.f1                        98.41899   98.41899            2950.420  155.5428
+D$PM_BMI_CONTINUOUS         6422.80792 2950.41980          200237.084 9230.8738
+D$LAB_HDL                    313.11842  155.54278            9230.874  485.8943
+sex.f1:D$PM_BMI_CONTINUOUS  2950.41980 2950.41980           93254.517 4552.4796
+                           sex.f1:D$PM_BMI_CONTINUOUS
+(Intercept)                                   2950.42
+sex.f1                                        2950.42
+D$PM_BMI_CONTINUOUS                          93254.52
+D$LAB_HDL                                     4552.48
+sex.f1:D$PM_BMI_CONTINUOUS                   93254.52
+Score vector overall
+                                  [,1]
+(Intercept)                  -44.15648
+sex.f1                       -25.45179
+D$PM_BMI_CONTINUOUS        -1117.50099
+D$LAB_HDL                    -74.43085
+sex.f1:D$PM_BMI_CONTINUOUS  -631.15411
+Current Deviance
+[1] 1529.587
+--------------------------------------------
+--------------------------------------------
+Iteration 5 
+
+SUMMARY OF MODEL STATE after iteration No 5 
+
+Current deviance 1511.744 on 5976 degrees of freedom 
+Convergence criterion     FALSE  ( 0.01180186 )
+
+beta
+[1] -6.9315019  0.9724864  0.1506622 -0.5472461 -0.0406716
+Information matrix overall
+                           (Intercept)     sex.f1 D$PM_BMI_CONTINUOUS D$LAB_HDL
+(Intercept)                  177.83661   78.03324            5486.211  252.7491
+sex.f1                        78.03324   78.03324            2438.485  119.4418
+D$PM_BMI_CONTINUOUS         5486.21063 2438.48543          176006.606 7674.2467
+D$LAB_HDL                    252.74906  119.44177            7674.247  380.2420
+sex.f1:D$PM_BMI_CONTINUOUS  2438.48543 2438.48543           80462.578 3644.4807
+                           sex.f1:D$PM_BMI_CONTINUOUS
+(Intercept)                                  2438.485
+sex.f1                                       2438.485
+D$PM_BMI_CONTINUOUS                         80462.578
+D$LAB_HDL                                    3644.481
+sex.f1:D$PM_BMI_CONTINUOUS                  80462.578
+Score vector overall
+                                  [,1]
+(Intercept)                  -6.680633
+sex.f1                       -4.423777
+D$PM_BMI_CONTINUOUS        -170.538204
+D$LAB_HDL                   -11.779503
+sex.f1:D$PM_BMI_CONTINUOUS -111.639135
+Current Deviance
+[1] 1511.744
+--------------------------------------------
+--------------------------------------------
+Iteration 6 
+
+SUMMARY OF MODEL STATE after iteration No 6 
+
+Current deviance 1511.12 on 5976 degrees of freedom 
+Convergence criterion     FALSE  ( 0.0004127031 )
+
+beta
+[1] -6.92636146  0.96493770  0.15067722 -0.55194833 -0.04047603
+Information matrix overall
+                           (Intercept)     sex.f1 D$PM_BMI_CONTINUOUS D$LAB_HDL
+(Intercept)                  171.54827   73.90345            5322.304  241.7905
+sex.f1                        73.90345   73.90345            2332.361  112.0756
+D$PM_BMI_CONTINUOUS         5322.30398 2332.36106          171709.882 7387.0967
+D$LAB_HDL                    241.79050  112.07561            7387.097  360.4209
+sex.f1:D$PM_BMI_CONTINUOUS  2332.36106 2332.36106           77728.230 3454.6453
+                           sex.f1:D$PM_BMI_CONTINUOUS
+(Intercept)                                  2332.361
+sex.f1                                       2332.361
+D$PM_BMI_CONTINUOUS                         77728.230
+D$LAB_HDL                                    3454.645
+sex.f1:D$PM_BMI_CONTINUOUS                  77728.230
+Score vector overall
+                                 [,1]
+(Intercept)                -0.2771316
+sex.f1                     -0.2138984
+D$PM_BMI_CONTINUOUS        -7.2097102
+D$LAB_HDL                  -0.5116178
+sex.f1:D$PM_BMI_CONTINUOUS -5.4955542
+Current Deviance
+[1] 1511.12
+--------------------------------------------
+--------------------------------------------
+Iteration 7 
+
+SUMMARY OF MODEL STATE after iteration No 7 
+
+Current deviance 1511.119 on 5976 degrees of freedom 
+Convergence criterion     FALSE  ( 9.366348e-07 )
+
+beta
+[1] -6.92634224  0.96491371  0.15067710 -0.55196104 -0.04047539
+Information matrix overall
+                           (Intercept)     sex.f1 D$PM_BMI_CONTINUOUS D$LAB_HDL
+(Intercept)                  171.27814   73.69473            5315.183  241.2966
+sex.f1                        73.69473   73.69473            2326.918  111.7012
+D$PM_BMI_CONTINUOUS         5315.18275 2326.91765          171519.878 7373.9909
+D$LAB_HDL                    241.29664  111.70120            7373.991  359.4972
+sex.f1:D$PM_BMI_CONTINUOUS  2326.91765 2326.91765           77584.823 3444.8644
+                           sex.f1:D$PM_BMI_CONTINUOUS
+(Intercept)                                  2326.918
+sex.f1                                       2326.918
+D$PM_BMI_CONTINUOUS                         77584.823
+D$LAB_HDL                                    3444.864
+sex.f1:D$PM_BMI_CONTINUOUS                  77584.823
+Score vector overall
+                                    [,1]
+(Intercept)                -0.0006695499
+sex.f1                     -0.0005590653
+D$PM_BMI_CONTINUOUS        -0.0176231758
+D$LAB_HDL                  -0.0012622013
+sex.f1:D$PM_BMI_CONTINUOUS -0.0144660672
+Current Deviance
+[1] 1511.119
+--------------------------------------------
+--------------------------------------------
+Iteration 8 
+
+SUMMARY OF MODEL STATE after iteration No 8 
+
+Current deviance 1511.119 on 5976 degrees of freedom 
+Convergence criterion     TRUE  ( 6.225465e-12 )
+
+beta
+[1] -6.92634224  0.96491371  0.15067710 -0.55196104 -0.04047539
+Information matrix overall
+                           (Intercept)     sex.f1 D$PM_BMI_CONTINUOUS D$LAB_HDL
+(Intercept)                  171.27749   73.69419            5315.165  241.2954
+sex.f1                        73.69419   73.69419            2326.903  111.7002
+D$PM_BMI_CONTINUOUS         5315.16549 2326.90335          171519.413 7373.9585
+D$LAB_HDL                    241.29542  111.70022            7373.958  359.4948
+sex.f1:D$PM_BMI_CONTINUOUS  2326.90335 2326.90335           77584.443 3444.8387
+                           sex.f1:D$PM_BMI_CONTINUOUS
+(Intercept)                                  2326.903
+sex.f1                                       2326.903
+D$PM_BMI_CONTINUOUS                         77584.443
+D$LAB_HDL                                    3444.839
+sex.f1:D$PM_BMI_CONTINUOUS                  77584.443
+Score vector overall
+                                    [,1]
+(Intercept)                -4.469141e-09
+sex.f1                     -3.805827e-09
+D$PM_BMI_CONTINUOUS        -1.180571e-07
+D$LAB_HDL                  -8.440414e-09
+sex.f1:D$PM_BMI_CONTINUOUS -9.864899e-08
+Current Deviance
+[1] 1511.119
+--------------------------------------------
+> glm.mod7
+$formula
+D$DIS_DIAB ~ sex.f * D$PM_BMI_CONTINUOUS + D$LAB_HDL
+
+$coefficients
+                              Estimate Std. Error   z-value      p-value
+(Intercept)                -6.92634224 0.77955465 -8.884999 6.392135e-19
+sex.f1                      0.96491371 0.81194071  1.188404 2.346742e-01
+D$PM_BMI_CONTINUOUS         0.15067710 0.02070879  7.275997 3.438706e-13
+D$LAB_HDL                  -0.55196104 0.25158530 -2.193932 2.824030e-02
+sex.f1:D$PM_BMI_CONTINUOUS -0.04047539 0.02561624 -1.580068 1.140913e-01
+
+$dev
+[1] 1511.119
+
+$nsubs
+[1] 5981
+
+$df
+[1] 5976
+
+$iter
+[1] 8
+
+attr(,"class")
+[1] "glmds"
+> 
+> #6. To determine predictors of taking lipid reducing medications
+> #For example, a logistic regression can, again, be used to determine whether
+> #HOP variables are significantly associated with a taking lipid reducing medications, MEDI_LPD. 
+> glm.mod8<-datashield.glm(opals, D$MEDI_LPD ~ sex.f*D$LAB_HDL+D$PM_BMI_CONTINUOUS+D$LAB_TSC, quote(binomial),quote(20))
+--------------------------------------------
+Iteration 1 
+
+SUMMARY OF MODEL STATE after iteration No 1 
+
+Current deviance 8291.427 on 5975 degrees of freedom 
+Convergence criterion     FALSE  ( 1.204844e+96 )
+
+beta
+[1] -2.075247560 -0.042169956 -0.032772282  0.009740061 -0.010225908
+[6]  0.005771502
+Information matrix overall
+                    (Intercept)    sex.f1 D$LAB_HDL D$PM_BMI_CONTINUOUS
+(Intercept)            1495.250   765.250  2343.500            40838.63
+sex.f1                  765.250   765.250  1297.425            20560.30
+D$LAB_HDL              2343.500  1297.425  3909.940            62957.87
+D$PM_BMI_CONTINUOUS   40838.631 20560.295 62957.875          1150712.98
+D$LAB_TSC              8769.150  4339.300 13794.542           240498.66
+sex.f1:D$LAB_HDL       1297.425  1297.425  2328.832            34182.93
+                     D$LAB_TSC sex.f1:D$LAB_HDL
+(Intercept)           8769.150         1297.425
+sex.f1                4339.300         1297.425
+D$LAB_HDL            13794.542         2328.832
+D$PM_BMI_CONTINUOUS 240498.664        34182.928
+D$LAB_TSC            53099.035         7405.022
+sex.f1:D$LAB_HDL      7405.022         2328.832
+Score vector overall
+                         [,1]
+(Intercept)          -2896.50
+sex.f1               -1499.50
+D$LAB_HDL            -4560.60
+D$PM_BMI_CONTINUOUS -78734.58
+D$LAB_TSC           -16991.00
+sex.f1:D$LAB_HDL     -2552.85
+Current Deviance
+[1] 8291.427
+--------------------------------------------
+--------------------------------------------
+Iteration 2 
+
+SUMMARY OF MODEL STATE after iteration No 2 
+
+Current deviance 1967.069 on 5975 degrees of freedom 
+Convergence criterion     FALSE  ( 3.214954 )
+
+beta
+[1] -3.340759991 -0.111677827 -0.097353073  0.028433717 -0.029922200
+[6]  0.006202827
+Information matrix overall
+                    (Intercept)    sex.f1  D$LAB_HDL D$PM_BMI_CONTINUOUS
+(Intercept)            658.8472  331.5933  1025.7304            18119.33
+sex.f1                 331.5933  331.5933   558.7375             8987.14
+D$LAB_HDL             1025.7304  558.7375  1699.3916            27745.55
+D$PM_BMI_CONTINUOUS  18119.3331 8987.1402 27745.5522           514451.22
+D$LAB_TSC             3862.5844 1878.9901  6035.7881           106651.93
+sex.f1:D$LAB_HDL       558.7375  558.7375   996.6810            14842.39
+                     D$LAB_TSC sex.f1:D$LAB_HDL
+(Intercept)           3862.584         558.7375
+sex.f1                1878.990         558.7375
+D$LAB_HDL             6035.788         996.6810
+D$PM_BMI_CONTINUOUS 106651.927       14842.3919
+D$LAB_TSC            23380.248        3186.6725
+sex.f1:D$LAB_HDL      3186.672         996.6810
+Score vector overall
+                           [,1]
+(Intercept)           -660.1911
+sex.f1                -347.5331
+D$LAB_HDL            -1046.4462
+D$PM_BMI_CONTINUOUS -17824.0191
+D$LAB_TSC            -3873.9644
+sex.f1:D$LAB_HDL      -595.1695
+Current Deviance
+[1] 1967.069
+--------------------------------------------
+--------------------------------------------
+Iteration 3 
+
+SUMMARY OF MODEL STATE after iteration No 3 
+
+Current deviance 1146.75 on 5975 degrees of freedom 
+Convergence criterion     FALSE  ( 0.7152798 )
+
+beta
+[1] -4.53887608 -0.16660768 -0.22293071  0.06231118 -0.06571055 -0.05674168
+Information matrix overall
+                    (Intercept)    sex.f1  D$LAB_HDL D$PM_BMI_CONTINUOUS
+(Intercept)            287.1681  138.2628   439.2749            8043.163
+sex.f1                 138.2628  138.2628   229.0340            3837.931
+D$LAB_HDL              439.2749  229.0340   714.3726           12100.246
+D$PM_BMI_CONTINUOUS   8043.1630 3837.9309 12100.2459          233020.333
+D$LAB_TSC             1681.9460  782.0188  2582.6290           47276.869
+sex.f1:D$LAB_HDL       229.0340  229.0340   401.5529            6223.129
+                     D$LAB_TSC sex.f1:D$LAB_HDL
+(Intercept)          1681.9460         229.0340
+sex.f1                782.0188         229.0340
+D$LAB_HDL            2582.6290         401.5529
+D$PM_BMI_CONTINUOUS 47276.8689        6223.1285
+D$LAB_TSC           10170.6657        1303.7393
+sex.f1:D$LAB_HDL     1303.7393         401.5529
+Score vector overall
+                          [,1]
+(Intercept)          -208.9472
+sex.f1               -114.3955
+D$LAB_HDL            -336.3704
+D$PM_BMI_CONTINUOUS -5556.5166
+D$LAB_TSC           -1226.8776
+sex.f1:D$LAB_HDL     -198.5267
+Current Deviance
+[1] 1146.75
+--------------------------------------------
+--------------------------------------------
+Iteration 4 
+
+SUMMARY OF MODEL STATE after iteration No 4 
+
+Current deviance 943.6414 on 5975 degrees of freedom 
+Convergence criterion     FALSE  ( 0.2152166 )
+
+beta
+[1] -5.38171873  0.10667476 -0.36950852  0.09568833 -0.09973635 -0.39491015
+Information matrix overall
+                    (Intercept)     sex.f1 D$LAB_HDL D$PM_BMI_CONTINUOUS
+(Intercept)           149.68623   65.64203  220.7787            4352.574
+sex.f1                 65.64203   65.64203  104.4994            1921.218
+D$LAB_HDL             220.77869  104.49937  345.2912            6315.142
+D$PM_BMI_CONTINUOUS  4352.57373 1921.21753 6315.1425          131437.899
+D$LAB_TSC             874.79072  369.66590 1295.6521           25501.835
+sex.f1:D$LAB_HDL      104.49937  104.49937  175.9267            2987.430
+                     D$LAB_TSC sex.f1:D$LAB_HDL
+(Intercept)           874.7907         104.4994
+sex.f1                369.6659         104.4994
+D$LAB_HDL            1295.6521         175.9267
+D$PM_BMI_CONTINUOUS 25501.8351        2987.4301
+D$LAB_TSC            5278.1081         592.2567
+sex.f1:D$LAB_HDL      592.2567         175.9267
+Score vector overall
+                           [,1]
+(Intercept)           -60.41170
+sex.f1                -36.49617
+D$LAB_HDL            -100.93286
+D$PM_BMI_CONTINUOUS -1560.11140
+D$LAB_TSC            -354.89724
+sex.f1:D$LAB_HDL      -65.23860
+Current Deviance
+[1] 943.6414
+--------------------------------------------
+--------------------------------------------
+Iteration 5 
+
+SUMMARY OF MODEL STATE after iteration No 5 
+
+Current deviance 898.4711 on 5975 degrees of freedom 
+Convergence criterion     FALSE  ( 0.05026901 )
+
+beta
+[1] -5.6527935  0.8688973 -0.4285971  0.1069648 -0.1072428 -1.0510403
+Information matrix overall
+                    (Intercept)     sex.f1  D$LAB_HDL D$PM_BMI_CONTINUOUS
+(Intercept)           105.34759   40.49399  148.22140            3197.675
+sex.f1                 40.49399   40.49399   60.40013            1272.075
+D$LAB_HDL             148.22140   60.40013  220.07322            4431.517
+D$PM_BMI_CONTINUOUS  3197.67498 1272.07545 4431.51656          101157.646
+D$LAB_TSC             614.00434  226.33995  868.15252           18659.189
+sex.f1:D$LAB_HDL       60.40013   60.40013   95.00761            1853.138
+                     D$LAB_TSC sex.f1:D$LAB_HDL
+(Intercept)           614.0043         60.40013
+sex.f1                226.3399         60.40013
+D$LAB_HDL             868.1525         95.00761
+D$PM_BMI_CONTINUOUS 18659.1895       1853.13841
+D$LAB_TSC            3695.2785        339.81259
+sex.f1:D$LAB_HDL      339.8126         95.00761
+Score vector overall
+                          [,1]
+(Intercept)          -14.63079
+sex.f1               -10.66530
+D$LAB_HDL            -26.02695
+D$PM_BMI_CONTINUOUS -374.32306
+D$LAB_TSC            -85.50813
+sex.f1:D$LAB_HDL     -19.93982
+Current Deviance
+[1] 898.4711
+--------------------------------------------
+--------------------------------------------
+Iteration 6 
+
+SUMMARY OF MODEL STATE after iteration No 6 
+
+Current deviance 890.4513 on 5975 degrees of freedom 
+Convergence criterion     FALSE  ( 0.009005492 )
+
+beta
+[1] -5.6959145  1.3444462 -0.4321651  0.1080942 -0.1055152 -1.4448188
+Information matrix overall
+                    (Intercept)     sex.f1  D$LAB_HDL D$PM_BMI_CONTINUOUS
+(Intercept)            93.53535   32.40526  127.64983            2892.423
+sex.f1                 32.40526   32.40526   45.49825            1061.077
+D$LAB_HDL             127.64983   45.49825  183.16144            3892.941
+D$PM_BMI_CONTINUOUS  2892.42331 1061.07665 3892.94065           93266.047
+D$LAB_TSC             544.82193  179.84399  747.84419           16853.811
+sex.f1:D$LAB_HDL       45.49825   45.49825   67.10306            1459.377
+                     D$LAB_TSC sex.f1:D$LAB_HDL
+(Intercept)           544.8219         45.49825
+sex.f1                179.8440         45.49825
+D$LAB_HDL             747.8442         67.10306
+D$PM_BMI_CONTINUOUS 16853.8110       1459.37658
+D$LAB_TSC            3278.0929        254.20174
+sex.f1:D$LAB_HDL      254.2017         67.10306
+Score vector overall
+                          [,1]
+(Intercept)          -2.786769
+sex.f1               -2.556542
+D$LAB_HDL            -5.256302
+D$PM_BMI_CONTINUOUS -74.239125
+D$LAB_TSC           -16.038022
+sex.f1:D$LAB_HDL     -4.901060
+Current Deviance
+[1] 890.4513
+--------------------------------------------
+--------------------------------------------
+Iteration 7 
+
+SUMMARY OF MODEL STATE after iteration No 7 
+
+Current deviance 889.6511 on 5975 degrees of freedom 
+Convergence criterion     FALSE  ( 0.0008992843 )
+
+beta
+[1] -5.6998847  1.4119280 -0.4321233  0.1081512 -0.1051501 -1.5022128
+Information matrix overall
+                    (Intercept)    sex.f1  D$LAB_HDL D$PM_BMI_CONTINUOUS
+(Intercept)            91.05504  30.16107  123.01930           2825.7523
+sex.f1                 30.16107  30.16107   41.22644            999.8874
+D$LAB_HDL             123.01930  41.22644  174.57167           3766.3238
+D$PM_BMI_CONTINUOUS  2825.75231 999.88738 3766.32382          91427.3588
+D$LAB_TSC             530.55081 166.85276  721.28381          16466.3503
+sex.f1:D$LAB_HDL       41.22644  41.22644   59.08118           1341.2647
+                     D$LAB_TSC sex.f1:D$LAB_HDL
+(Intercept)           530.5508         41.22644
+sex.f1                166.8528         41.22644
+D$LAB_HDL             721.2838         59.08118
+D$PM_BMI_CONTINUOUS 16466.3503       1341.26474
+D$LAB_TSC            3193.9158        229.62024
+sex.f1:D$LAB_HDL      229.6202         59.08118
+Score vector overall
+                          [,1]
+(Intercept)         -0.3324983
+sex.f1              -0.3309661
+D$LAB_HDL           -0.6120699
+D$PM_BMI_CONTINUOUS -9.3470008
+D$LAB_TSC           -1.8913262
+sex.f1:D$LAB_HDL    -0.6098310
+Current Deviance
+[1] 889.6511
+--------------------------------------------
+--------------------------------------------
+Iteration 8 
+
+SUMMARY OF MODEL STATE after iteration No 8 
+
+Current deviance 889.6382 on 5975 degrees of freedom 
+Convergence criterion     FALSE  ( 1.448352e-05 )
+
+beta
+[1] -5.6999511  1.4130999 -0.4321221  0.1081521 -0.1051440 -1.5032243
+Information matrix overall
+                    (Intercept)    sex.f1  D$LAB_HDL D$PM_BMI_CONTINUOUS
+(Intercept)            90.72830  29.83668  122.42342           2816.5213
+sex.f1                 29.83668  29.83668   40.63375            990.6484
+D$LAB_HDL             122.42342  40.63375  173.48962           3749.4215
+D$PM_BMI_CONTINUOUS  2816.52127 990.64835 3749.42152          91154.8991
+D$LAB_TSC             528.69384 164.98410  717.90070          16413.4645
+sex.f1:D$LAB_HDL       40.63375  40.63375   58.00361           1324.3523
+                     D$LAB_TSC sex.f1:D$LAB_HDL
+(Intercept)           528.6938         40.63375
+sex.f1                164.9841         40.63375
+D$LAB_HDL             717.9007         58.00361
+D$PM_BMI_CONTINUOUS 16413.4645       1324.35231
+D$LAB_TSC            3183.1067        226.22123
+sex.f1:D$LAB_HDL      226.2212         58.00361
+Score vector overall
+                            [,1]
+(Intercept)         -0.006133475
+sex.f1              -0.006126502
+D$LAB_HDL           -0.011059959
+D$PM_BMI_CONTINUOUS -0.175135260
+D$LAB_TSC           -0.034836123
+sex.f1:D$LAB_HDL    -0.011050524
+Current Deviance
+[1] 889.6382
+--------------------------------------------
+--------------------------------------------
+Iteration 9 
+
+SUMMARY OF MODEL STATE after iteration No 9 
+
+Current deviance 889.6382 on 5975 degrees of freedom 
+Convergence criterion     TRUE  ( 4.512452e-09 )
+
+beta
+[1] -5.6999511  1.4131003 -0.4321221  0.1081521 -0.1051440 -1.5032246
+Information matrix overall
+                    (Intercept)    sex.f1  D$LAB_HDL D$PM_BMI_CONTINUOUS
+(Intercept)            90.72219  29.83059  122.41249            2816.347
+sex.f1                 29.83059  29.83059   40.62285             990.473
+D$LAB_HDL             122.41249  40.62285  173.47002            3749.109
+D$PM_BMI_CONTINUOUS  2816.34652 990.47297 3749.10876           91149.660
+D$LAB_TSC             528.65918 164.94914  717.83869           16412.465
+sex.f1:D$LAB_HDL       40.62285  40.62285   57.98405            1324.039
+                     D$LAB_TSC sex.f1:D$LAB_HDL
+(Intercept)           528.6592         40.62285
+sex.f1                164.9491         40.62285
+D$LAB_HDL             717.8387         57.98405
+D$PM_BMI_CONTINUOUS 16412.4653       1324.03863
+D$LAB_TSC            3182.9051        226.15879
+sex.f1:D$LAB_HDL      226.1588         57.98405
+Score vector overall
+                             [,1]
+(Intercept)         -1.956893e-06
+sex.f1              -1.954967e-06
+D$LAB_HDL           -3.519096e-06
+D$PM_BMI_CONTINUOUS -5.597576e-05
+D$LAB_TSC           -1.111975e-05
+sex.f1:D$LAB_HDL    -3.516490e-06
+Current Deviance
+[1] 889.6382
+--------------------------------------------
+> glm.mod8
+$formula
+D$MEDI_LPD ~ sex.f * D$LAB_HDL + D$PM_BMI_CONTINUOUS + D$LAB_TSC
+
+$coefficients
+                      Estimate Std. Error    z-value      p-value
+(Intercept)         -5.6999511 0.98926288 -5.7618164 8.321348e-09
+sex.f1               1.4131003 1.04820832  1.3481101 1.776230e-01
+D$LAB_HDL           -0.4321221 0.43563186 -0.9919434 3.212251e-01
+D$PM_BMI_CONTINUOUS  0.1081521 0.01792585  6.0333034 1.606414e-09
+D$LAB_TSC           -0.1051440 0.10281650 -1.0226374 3.064793e-01
+sex.f1:D$LAB_HDL    -1.5032246 0.74790443 -2.0099154 4.444015e-02
+
+$dev
+[1] 889.6382
+
+$nsubs
+[1] 5981
+
+$df
+[1] 5975
+
+$iter
+[1] 9
+
+attr(,"class")
+[1] "glmds"
+> 
+> datashield.aggregate(opals,quote(quantile.mean.ds(D$LAB_HDL)))
+[[1]]
+      5%       10      25%      50%      75%      90%      95%     Mean 
+1.000000 1.100000 1.300000 1.500000 1.800000 2.100000 2.300000 1.565813 
+
+> 
+> datashield.assign(opals, 'HDL.1.5', quote(D$LAB_HDL-1.5))
+> 
+> glm.mod9<-datashield.glm(opals, D$MEDI_LPD ~ sex.f*HDL.1.5+D$PM_BMI_CONTINUOUS+D$LAB_TSC, quote(binomial),quote(20))
+--------------------------------------------
+Iteration 1 
+
+SUMMARY OF MODEL STATE after iteration No 1 
+
+Current deviance 8291.427 on 5975 degrees of freedom 
+Convergence criterion     FALSE  ( 1.204844e+96 )
+
+beta
+[1] -2.124405984 -0.033512703 -0.032772282  0.009740061 -0.010225908
+[6]  0.005771502
+Information matrix overall
+                    (Intercept)   sex.f1   HDL.1.5 D$PM_BMI_CONTINUOUS
+(Intercept)            1495.250   765.25  100.6250           40838.631
+sex.f1                  765.250   765.25  149.5500           20560.295
+HDL.1.5                 100.625   149.55  243.7525            1699.929
+D$PM_BMI_CONTINUOUS   40838.631 20560.30 1699.9289         1150712.980
+D$LAB_TSC              8769.150  4339.30  640.8175          240498.664
+sex.f1:HDL.1.5          149.550   149.55  158.3700            3342.485
+                      D$LAB_TSC sex.f1:HDL.1.5
+(Intercept)           8769.1500       149.5500
+sex.f1                4339.3000       149.5500
+HDL.1.5                640.8175       158.3700
+D$PM_BMI_CONTINUOUS 240498.6640      3342.4851
+D$LAB_TSC            53099.0350       896.0725
+sex.f1:HDL.1.5         896.0725       158.3700
+Score vector overall
+                         [,1]
+(Intercept)          -2896.50
+sex.f1               -1499.50
+HDL.1.5               -215.85
+D$PM_BMI_CONTINUOUS -78734.58
+D$LAB_TSC           -16991.00
+sex.f1:HDL.1.5        -303.60
+Current Deviance
+[1] 8291.427
+--------------------------------------------
+--------------------------------------------
+Iteration 2 
+
+SUMMARY OF MODEL STATE after iteration No 2 
+
+Current deviance 1967.069 on 5975 degrees of freedom 
+Convergence criterion     FALSE  ( 3.214954 )
+
+beta
+[1] -3.486789601 -0.102373586 -0.097353073  0.028433717 -0.029922200
+[6]  0.006202827
+Information matrix overall
+                    (Intercept)     sex.f1   HDL.1.5 D$PM_BMI_CONTINUOUS
+(Intercept)           658.84717  331.59330  37.45961          18119.3331
+sex.f1                331.59330  331.59330  61.34757           8987.1402
+HDL.1.5                37.45961   61.34757 104.60667            566.5526
+D$PM_BMI_CONTINUOUS 18119.33305 8987.14021 566.55261         514451.2177
+D$LAB_TSC            3862.58444 1878.99008 241.91139         106651.9272
+sex.f1:HDL.1.5         61.34757   61.34757  66.55334           1361.6815
+                      D$LAB_TSC sex.f1:HDL.1.5
+(Intercept)           3862.5844       61.34757
+sex.f1                1878.9901       61.34757
+HDL.1.5                241.9114       66.55334
+D$PM_BMI_CONTINUOUS 106651.9272     1361.68154
+D$LAB_TSC            23380.2484      368.18737
+sex.f1:HDL.1.5         368.1874       66.55334
+Score vector overall
+                            [,1]
+(Intercept)           -660.19111
+sex.f1                -347.53313
+HDL.1.5                -56.15950
+D$PM_BMI_CONTINUOUS -17824.01914
+D$LAB_TSC            -3873.96440
+sex.f1:HDL.1.5         -73.86986
+Current Deviance
+[1] 1967.069
+--------------------------------------------
+--------------------------------------------
+Iteration 3 
+
+SUMMARY OF MODEL STATE after iteration No 3 
+
+Current deviance 1146.75 on 5975 degrees of freedom 
+Convergence criterion     FALSE  ( 0.7152798 )
+
+beta
+[1] -4.87327214 -0.25172020 -0.22293071  0.06231118 -0.06571055 -0.05674168
+Information matrix overall
+                    (Intercept)     sex.f1   HDL.1.5 D$PM_BMI_CONTINUOUS
+(Intercept)          287.168100  138.26282  8.522799          8043.16302
+sex.f1               138.262820  138.26282 21.639789          3837.93086
+HDL.1.5                8.522799   21.63979 42.675992            35.50132
+D$PM_BMI_CONTINUOUS 8043.163021 3837.93086 35.501323        233020.33279
+D$LAB_TSC           1681.945970  782.01875 59.710017         47276.86895
+sex.f1:HDL.1.5        21.639789   21.63979 25.542167           466.23222
+                      D$LAB_TSC sex.f1:HDL.1.5
+(Intercept)          1681.94597       21.63979
+sex.f1                782.01875       21.63979
+HDL.1.5                59.71002       25.54217
+D$PM_BMI_CONTINUOUS 47276.86895      466.23222
+D$LAB_TSC           10170.66573      130.71120
+sex.f1:HDL.1.5        130.71120       25.54217
+Score vector overall
+                           [,1]
+(Intercept)          -208.94717
+sex.f1               -114.39547
+HDL.1.5               -22.94966
+D$PM_BMI_CONTINUOUS -5556.51657
+D$LAB_TSC           -1226.87757
+sex.f1:HDL.1.5        -26.93346
+Current Deviance
+[1] 1146.75
+--------------------------------------------
+--------------------------------------------
+Iteration 4 
+
+SUMMARY OF MODEL STATE after iteration No 4 
+
+Current deviance 943.6414 on 5975 degrees of freedom 
+Convergence criterion     FALSE  ( 0.2152166 )
+
+beta
+[1] -5.93598151 -0.48569047 -0.36950852  0.09568833 -0.09973635 -0.39491015
+Information matrix overall
+                    (Intercept)     sex.f1     HDL.1.5 D$PM_BMI_CONTINUOUS
+(Intercept)          149.686234   65.64203   -3.750664           4352.5737
+sex.f1                65.642029   65.64203    6.036330           1921.2175
+HDL.1.5               -3.750664    6.03633   19.749194           -213.7181
+D$PM_BMI_CONTINUOUS 4352.573733 1921.21753 -213.718105         131437.8986
+D$LAB_TSC            874.790723  369.66590  -16.534032          25501.8351
+sex.f1:HDL.1.5         6.036330    6.03633   10.123183            105.6038
+                      D$LAB_TSC sex.f1:HDL.1.5
+(Intercept)           874.79072        6.03633
+sex.f1                369.66590        6.03633
+HDL.1.5               -16.53403       10.12318
+D$PM_BMI_CONTINUOUS 25501.83515      105.60384
+D$LAB_TSC            5278.10809       37.75782
+sex.f1:HDL.1.5         37.75782       10.12318
+Score vector overall
+                           [,1]
+(Intercept)           -60.41170
+sex.f1                -36.49617
+HDL.1.5               -10.31531
+D$PM_BMI_CONTINUOUS -1560.11140
+D$LAB_TSC            -354.89724
+sex.f1:HDL.1.5        -10.49435
+Current Deviance
+[1] 943.6414
+--------------------------------------------
+--------------------------------------------
+Iteration 5 
+
+SUMMARY OF MODEL STATE after iteration No 5 
+
+Current deviance 898.4711 on 5975 degrees of freedom 
+Convergence criterion     FALSE  ( 0.05026901 )
+
+beta
+[1] -6.2956892 -0.7076631 -0.4285971  0.1069648 -0.1072428 -1.0510403
+Information matrix overall
+                     (Intercept)       sex.f1      HDL.1.5 D$PM_BMI_CONTINUOUS
+(Intercept)          105.3475868   40.4939907   -9.7999800          3197.67498
+sex.f1                40.4939907   40.4939907   -0.3408594          1272.07545
+HDL.1.5               -9.7999800   -0.3408594   12.4410905          -364.99591
+D$PM_BMI_CONTINUOUS 3197.6749814 1272.0754484 -364.9959121        101157.64568
+D$LAB_TSC            614.0043376  226.3399479  -52.8539908         18659.18945
+sex.f1:HDL.1.5        -0.3408594   -0.3408594    4.9187122           -54.97477
+                        D$LAB_TSC sex.f1:HDL.1.5
+(Intercept)           614.0043376     -0.3408594
+sex.f1                226.3399479     -0.3408594
+HDL.1.5               -52.8539908      4.9187122
+D$PM_BMI_CONTINUOUS 18659.1894525    -54.9747661
+D$LAB_TSC            3695.2785403      0.3026681
+sex.f1:HDL.1.5          0.3026681      4.9187122
+Score vector overall
+                           [,1]
+(Intercept)          -14.630794
+sex.f1               -10.665300
+HDL.1.5               -4.080759
+D$PM_BMI_CONTINUOUS -374.323060
+D$LAB_TSC            -85.508132
+sex.f1:HDL.1.5        -3.941875
+Current Deviance
+[1] 898.4711
+--------------------------------------------
+--------------------------------------------
+Iteration 6 
+
+SUMMARY OF MODEL STATE after iteration No 6 
+
+Current deviance 890.4513 on 5975 degrees of freedom 
+Convergence criterion     FALSE  ( 0.009005492 )
+
+beta
+[1] -6.3441622 -0.8227820 -0.4321651  0.1080942 -0.1055152 -1.4448188
+Information matrix overall
+                    (Intercept)      sex.f1     HDL.1.5 D$PM_BMI_CONTINUOUS
+(Intercept)           93.535355   32.405262  -12.653197           2892.4233
+sex.f1                32.405262   32.405262   -3.109643           1061.0767
+HDL.1.5              -12.653197   -3.109643   10.666487           -445.6943
+D$PM_BMI_CONTINUOUS 2892.423311 1061.076652 -445.694316          93266.0473
+D$LAB_TSC            544.821925  179.843994  -69.388702          16853.8110
+sex.f1:HDL.1.5        -3.109643   -3.109643    3.520152           -132.2384
+                      D$LAB_TSC sex.f1:HDL.1.5
+(Intercept)           544.82193      -3.109643
+sex.f1                179.84399      -3.109643
+HDL.1.5               -69.38870       3.520152
+D$PM_BMI_CONTINUOUS 16853.81104    -132.238394
+D$LAB_TSC            3278.09292     -15.564251
+sex.f1:HDL.1.5        -15.56425       3.520152
+Score vector overall
+                          [,1]
+(Intercept)          -2.786769
+sex.f1               -2.556542
+HDL.1.5              -1.076149
+D$PM_BMI_CONTINUOUS -74.239125
+D$LAB_TSC           -16.038022
+sex.f1:HDL.1.5       -1.066248
+Current Deviance
+[1] 890.4513
+--------------------------------------------
+--------------------------------------------
+Iteration 7 
+
+SUMMARY OF MODEL STATE after iteration No 7 
+
+Current deviance 889.6511 on 5975 degrees of freedom 
+Convergence criterion     FALSE  ( 0.0008992843 )
+
+beta
+[1] -6.3480697 -0.8413913 -0.4321233  0.1081512 -0.1051501 -1.5022128
+Information matrix overall
+                    (Intercept)     sex.f1     HDL.1.5 D$PM_BMI_CONTINUOUS
+(Intercept)           91.055044  30.161072  -13.563269           2825.7523
+sex.f1                30.161072  30.161072   -4.015167            999.8874
+HDL.1.5              -13.563269  -4.015167   10.387630           -472.3046
+D$PM_BMI_CONTINUOUS 2825.752308 999.887380 -472.304640          91427.3588
+D$LAB_TSC            530.550811 166.852763  -74.542405          16466.3503
+sex.f1:HDL.1.5        -4.015167  -4.015167    3.264273           -158.5663
+                     D$LAB_TSC sex.f1:HDL.1.5
+(Intercept)           530.5508      -4.015167
+sex.f1                166.8528      -4.015167
+HDL.1.5               -74.5424       3.264273
+D$PM_BMI_CONTINUOUS 16466.3503    -158.566329
+D$LAB_TSC            3193.9158     -20.658899
+sex.f1:HDL.1.5        -20.6589       3.264273
+Score vector overall
+                          [,1]
+(Intercept)         -0.3324983
+sex.f1              -0.3309661
+HDL.1.5             -0.1133225
+D$PM_BMI_CONTINUOUS -9.3470008
+D$LAB_TSC           -1.8913262
+sex.f1:HDL.1.5      -0.1133818
+Current Deviance
+[1] 889.6511
+--------------------------------------------
+--------------------------------------------
+Iteration 8 
+
+SUMMARY OF MODEL STATE after iteration No 8 
+
+Current deviance 889.6382 on 5975 degrees of freedom 
+Convergence criterion     FALSE  ( 1.448352e-05 )
+
+beta
+[1] -6.3481343 -0.8417365 -0.4321221  0.1081521 -0.1051440 -1.5032243
+Information matrix overall
+                    (Intercept)     sex.f1     HDL.1.5 D$PM_BMI_CONTINUOUS
+(Intercept)           90.728295  29.836679  -13.669024           2816.5213
+sex.f1                29.836679  29.836679   -4.121266            990.6484
+HDL.1.5              -13.669024  -4.121266   10.358026           -475.3604
+D$PM_BMI_CONTINUOUS 2816.521271 990.648352 -475.360389          91154.8991
+D$LAB_TSC            528.693837 164.984103  -75.140052          16413.4645
+sex.f1:HDL.1.5        -4.121266  -4.121266    3.234879           -161.6202
+                      D$LAB_TSC sex.f1:HDL.1.5
+(Intercept)           528.69384      -4.121266
+sex.f1                164.98410      -4.121266
+HDL.1.5               -75.14005       3.234879
+D$PM_BMI_CONTINUOUS 16413.46450    -161.620222
+D$LAB_TSC            3183.10673     -21.254924
+sex.f1:HDL.1.5        -21.25492       3.234879
+Score vector overall
+                            [,1]
+(Intercept)         -0.006133475
+sex.f1              -0.006126502
+HDL.1.5             -0.001859747
+D$PM_BMI_CONTINUOUS -0.175135260
+D$LAB_TSC           -0.034836123
+sex.f1:HDL.1.5      -0.001860771
+Current Deviance
+[1] 889.6382
+--------------------------------------------
+--------------------------------------------
+Iteration 9 
+
+SUMMARY OF MODEL STATE after iteration No 9 
+
+Current deviance 889.6382 on 5975 degrees of freedom 
+Convergence criterion     TRUE  ( 4.512452e-09 )
+
+beta
+[1] -6.3481343 -0.8417366 -0.4321221  0.1081521 -0.1051440 -1.5032246
+Information matrix overall
+                    (Intercept)     sex.f1     HDL.1.5 D$PM_BMI_CONTINUOUS
+(Intercept)           90.722189  29.830595  -13.670794           2816.3465
+sex.f1                29.830595  29.830595   -4.123042            990.4730
+HDL.1.5              -13.670794  -4.123042   10.357481           -475.4110
+D$PM_BMI_CONTINUOUS 2816.346523 990.472970 -475.411026          91149.6598
+D$LAB_TSC            528.659178 164.949141  -75.150072          16412.4653
+sex.f1:HDL.1.5        -4.123042  -4.123042    3.234336           -161.6708
+                      D$LAB_TSC sex.f1:HDL.1.5
+(Intercept)           528.65918      -4.123042
+sex.f1                164.94914      -4.123042
+HDL.1.5               -75.15007       3.234336
+D$PM_BMI_CONTINUOUS 16412.46527    -161.670826
+D$LAB_TSC            3182.90513     -21.264918
+sex.f1:HDL.1.5        -21.26492       3.234336
+Score vector overall
+                             [,1]
+(Intercept)         -1.956892e-06
+sex.f1              -1.954967e-06
+HDL.1.5             -5.837568e-07
+D$PM_BMI_CONTINUOUS -5.597574e-05
+D$LAB_TSC           -1.111975e-05
+sex.f1:HDL.1.5      -5.840396e-07
+Current Deviance
+[1] 889.6382
+--------------------------------------------
+> glm.mod9
+$formula
+D$MEDI_LPD ~ sex.f * HDL.1.5 + D$PM_BMI_CONTINUOUS + D$LAB_TSC
+
+$coefficients
+                      Estimate Std. Error    z-value      p-value
+(Intercept)         -6.3481343 0.78303768 -8.1070611 5.185880e-16
+sex.f1              -0.8417366 0.25780429 -3.2650219 1.094556e-03
+HDL.1.5             -0.4321221 0.43563186 -0.9919434 3.212251e-01
+D$PM_BMI_CONTINUOUS  0.1081521 0.01792585  6.0333034 1.606414e-09
+D$LAB_TSC           -0.1051440 0.10281650 -1.0226374 3.064793e-01
+sex.f1:HDL.1.5      -1.5032246 0.74790443 -2.0099154 4.444015e-02
+
+$dev
+[1] 889.6382
+
+$nsubs
+[1] 5981
+
+$df
+[1] 5975
+
+$iter
+[1] 9
+
+attr(,"class")
+[1] "glmds"
+> 
+> proc.time()
+   user  system elapsed 
+  2.892   0.180  78.383 
