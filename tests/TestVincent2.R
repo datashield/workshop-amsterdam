@@ -10,8 +10,8 @@ GlobalAssign <- function(opals, variable) {
 
 # Login in opal of each study
 credentials <- list(
-  sslcert=paste0(Sys.glob('~'),'/.ssh/publickey.pem'),
-  sslkey=paste0(Sys.glob('~'),'/.ssh/privatekey.pem'),
+  sslcert=paste0(Sys.glob('~'),'/.ssh/datashield-publickey.pem'),
+  sslkey=paste0(Sys.glob('~'),'/.ssh/datashield-privatekey.pem'),
   ssl.verifyhost=0,
   ssl.verifypeer=0,
   sslversion=3)
